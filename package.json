@@ -1,0 +1,16 @@
+{
+  "name": "nexus-faucet-dapp",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "contracts",
+    "frontend"
+  ],
+  "scripts": {
+    "frontend": "cd frontend && npm run dev",
+    "deploy": "cd contracts && npx hardhat run scripts/deploy.ts --network nexus"
+  },
+  "dependencies": {
+
+}
+}
