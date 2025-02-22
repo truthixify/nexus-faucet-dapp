@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useCallback, useRef } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { BrowserProvider, JsonRpcSigner, Contract, parseEther } from 'ethers'
 import abi from "../../public/abi.json"
 
