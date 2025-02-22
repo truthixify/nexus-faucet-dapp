@@ -17,13 +17,13 @@ contract TokenFaucet is Ownable {
     }
 
     /** @dev Allows only the owner to deposit funds into the faucet */
-    function depositFunds() external payable onlyOwner {
+    function depositFunds() public payable onlyOwner {
         require(msg.value > 0, "Try water the floor if you wan tele tutu");
         emit FundsDeposited(msg.sender, msg.value);
     }
 
     /** @dev Allows users to claim tokens with a cooldown period */
-    function claimTokens() external {
+    function claimTokens() public {
         require(address(this).balance >= claimAmount, "Faucet is broke ASF");
         require(block.timestamp >= lastClaimTime[msg.sender] + cooldownTime, "Your time never reach, do the calms!");
 
@@ -35,21 +35,21 @@ contract TokenFaucet is Ownable {
     }
 
     /** @dev Allows only the owner to withdraw all remaining funds */
-    function withdrawFunds() external onlyOwner {
+    function withdrawFunds() public onlyOwner {
         uint256 balance = address(this).balance;
-        require(balance > 0, "Shibor no dey");
+        require(balance > 0, "Shibor no dey faucet, so rest");
 
         payable(owner()).transfer(balance);
         emit FundsWithdrawn(owner(), balance);
     }
 
     /** @dev Allows the owner to update the claim amount */
-    function setClaimAmount(uint256 _newAmount) external onlyOwner {
+    function setClaimAmount(uint256 _newAmount) public onlyOwner {
         claimAmount = _newAmount;
     }
 
     /** @dev Allows the owner to update the cooldown period */
-    function setCooldownTime(uint256 _newCooldown) external onlyOwner {
+    function setCooldownTime(uint256 _newCooldown) public onlyOwner {
         cooldownTime = _newCooldown;
     }
 }
