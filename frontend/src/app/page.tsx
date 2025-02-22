@@ -24,40 +24,6 @@ export default function Home() {
   const [error, setError] = useState<string>("")
   const [txType, setTxType] = useState<string>("")
   const [isOwner, setIsOwner] = useState<boolean>(false)
-  const rep = useRef("")
-
-  useEffect(() => {
-    checkWalletConnection()
-
-    // Add network change listener
-    if (window.ethereum) {
-      window.ethereum.on('chainChanged', async () => {
-        const networkCorrect = await checkNetwork()
-        if (networkCorrect) {
-          const provider = new BrowserProvider(window.ethereum)
-          setSigner(await provider.getSigner())
-        }
-      })
-    }
-
-    // Cleanup listener
-    return () => {
-      if (window.ethereum) {
-        window.ethereum.removeListener('chainChanged', () => {
-          console.log('Network change listener removed')
-        })
-      }
-    }
-  }, [])
-
-  useEffect(() => {
-    if (signer) {
-        signer.getAddress().then(address => {
-            setUserAddress(address)
-            checkUser(address)
-        })
-    }
-  }, [signer])
 
   const checkNetwork = useCallback(async () => {
     const chainId = await window.ethereum.request({ method: 'eth_chainId' })
@@ -148,6 +114,39 @@ export default function Home() {
       }
     }
   }
+
+  useEffect(() => {
+    checkWalletConnection()
+
+    // Add network change listener
+    if (window.ethereum) {
+      window.ethereum.on('chainChanged', async () => {
+        const networkCorrect = await checkNetwork()
+        if (networkCorrect) {
+          const provider = new BrowserProvider(window.ethereum)
+          setSigner(await provider.getSigner())
+        }
+      })
+    }
+
+    // Cleanup listener
+    return () => {
+      if (window.ethereum) {
+        window.ethereum.removeListener('chainChanged', () => {
+          console.log('Network change listener removed')
+        })
+      }
+    }
+  }, [checkNetwork, checkWalletConnection])
+
+  useEffect(() => {
+    if (signer) {
+        signer.getAddress().then(address => {
+            setUserAddress(address)
+            checkUser(address)
+        })
+    }
+  }, [signer])
 
   const claimTokens = async () => {
     const contract = new Contract(CONTRACT_ADDRESS, CONTRACT_ABI, signer)
